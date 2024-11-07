@@ -11,7 +11,7 @@ public class DoorController : MonoBehaviour
     public SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component
     public float animationDuration = 2f; // Duration for the door animation
 
-    private bool isOpen = false; // Track if the door is open or closed
+    public bool isOpen = false; // Track if the door is open or closed
     private bool isAnimating = false; // Track if an animation is currently running
     private Coroutine currentAnimation; // Reference to the current animation coroutine
 

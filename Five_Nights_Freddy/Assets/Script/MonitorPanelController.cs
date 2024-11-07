@@ -20,7 +20,7 @@ public class MonitorPanelController : MonoBehaviour
     public TextMeshProUGUI displayText; // Text to show the specific name
     public Image redDotImage; // Reference to the red dot image for recording sign
 
-    private ButtonInfo activeButtonInfo; // Currently active button info
+    public ButtonInfo activeButtonInfo; // Currently active button info
     private Coroutine highlightCoroutine; // Reference to the current highlight coroutine
     private Coroutine movementCoroutine; // Reference to the movement coroutine
     private Coroutine redDotCoroutine; // Reference to the red dot blinking coroutine
