@@ -6,72 +6,31 @@ using UnityEngine.UI;
 
 public class TimeSystem : MonoBehaviour
 {
-    public float initialPower = 99f; // Starting power percentage
-    private float currentPower;
-    public TextMeshProUGUI powerText; // Reference to TextMeshPro for power display
-    public Image usageImage; // Reference to Image component for usage degree display
-    public List<Sprite> usageSprites; // List of sprites for each usage degree
-    public GameObject losePanel; // Reference to the lose panel UI
-
-    private int usageDegree = 1; // Default usage degree
-    private float[] drainRates = { 8f, 4f, 3f, 2f }; // Drain rates per degree (in seconds for each 1% power)
-    private float drainTimer; // Timer for power drain
-
-    private int activeSystems = 0; // Track the number of active systems (Light/Door/Monitor)
+    public TextMeshProUGUI timeText; // Reference to the TextMeshPro component for time display
+    private string[] times = { "12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM" }; // Times to display
+    private int currentHourIndex = 0; // Track the current hour index
+    public float timeInterval = 90f; // Time interval in seconds between each hour
 
     void Start()
     {
-        currentPower = initialPower;
-        UpdatePowerText();
-        UpdateUsageDisplay();
+        // Initialize the time display and start the timer coroutine
+        timeText.text = times[currentHourIndex];
+        StartCoroutine(UpdateTime());
     }
 
-    void Update()
+    private IEnumerator UpdateTime()
     {
-        // Drain power based on usage degree
-        drainTimer += Time.deltaTime;
-        float drainDuration = drainRates[usageDegree - 1];
-
-        if (drainTimer >= drainDuration)
+        // Loop through each time until reaching 6 AM
+        while (currentHourIndex < times.Length - 1)
         {
-            drainTimer = 0f;
-            DecreasePower(1);
+            yield return new WaitForSeconds(timeInterval); // Wait for the specified time interval
+
+            // Move to the next hour and update the display
+            currentHourIndex++;
+            timeText.text = times[currentHourIndex];
         }
-    }
 
-    public void ToggleSystem(bool isActive)
-    {
-        activeSystems += isActive ? 1 : -1;
-        activeSystems = Mathf.Clamp(activeSystems, 0, 3);
-
-        // Determine the new usage degree based on active systems
-        usageDegree = Mathf.Clamp(activeSystems + 1, 1, 4);
-        UpdateUsageDisplay();
-    }
-
-    private void DecreasePower(int amount)
-    {
-        currentPower -= amount;
-        if (currentPower < 0) currentPower = 0;
-
-        UpdatePowerText();
-
-        if (currentPower <= 0)
-        {
-            // Show the lose panel if power is depleted
-            losePanel.SetActive(true);
-            Debug.Log("Game Over - Out of Power!");
-        }
-    }
-
-    private void UpdatePowerText()
-    {
-        powerText.text = "Power Left: " + Mathf.RoundToInt(currentPower) + "%";
-    }
-
-    private void UpdateUsageDisplay()
-    {
-        // Update usage image based on current usage degree
-        usageImage.sprite = usageSprites[usageDegree - 1];
+        // Optionally, handle reaching 6 AM (e.g., trigger an event)
+        Debug.Log("Reached 6 AM - End of the game or transition.");
     }
 }
